@@ -1,0 +1,13 @@
+# Dockerfile para MySQL
+
+# Usa la imagen oficial de MySQL
+FROM mysql:latest
+
+# Establece las variables de entorno para la configuración de MySQL
+ENV MYSQL_DATABASE=exosky
+ENV MYSQL_USER=beekeepers
+ENV MYSQL_PASSWORD=beekeeperspass
+ENV MYSQL_ROOT_PASSWORD=rootpass
+
+# Exponer el puerto 3306 para acceder a MySQL
+EXPOSE 3306
