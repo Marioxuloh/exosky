@@ -4,5 +4,8 @@ from .services import get_exoplanets_data
 
 class ExoplanetsDataView(APIView):
     def get(self, request):
-        data = get_exoplanets_data()  # Lógica para consumir la API de Gaia
-        return Response(data)
+        try:
+            data = get_exoplanets_data()
+            return Response(data)
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
