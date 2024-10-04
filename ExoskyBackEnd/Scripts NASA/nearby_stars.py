@@ -12,15 +12,15 @@ def get_nearby_stars(ra, dec, parallax, visible_distance, radius):
     nearby_star_query = os.getenv('NEARBY_STAR_QUERY')
     
     ly = utils.parallaxmas_to_light_years(parallax)
-    toleranceMin = utils.light_years_to_parallaxmas(ly - visible_distance)
-    toleranceMax = utils.light_years_to_parallaxmas(ly + visible_distance)
-    
+    toleranceMin = utils.light_years_to_parsec(ly - visible_distance) if ly - visible_distance > 0 else 0
+    toleranceMax = utils.light_years_to_parsec(ly + visible_distance)
+     
     # El radio no puede ser mayor a 90 grados acorde a la información de gai
     if radius > 90:
         radius = 90
 
     # Consulta a la base de datos de Gaia
-    query = nearby_star_query.format(ra, dec, radius,  toleranceMin, toleranceMax)
+    query = nearby_star_query.format(ra, dec, radius, toleranceMin, toleranceMax)
 
     job = Gaia.launch_job(query)
     result = job.get_results()
@@ -62,9 +62,10 @@ if __name__ == "__main__":
     #Coordenadas de Proxima Centary inclyendo parallax
     ra = 217.39346574260355
     dec = -62.67618210292382
-    parallax = 769
+    parallax = 25
     visible_distance = float(os.getenv('VISIBLE_DISTANCE'))
     radius = utils.convert_parsecs_to_angle(utils.light_years_to_parsec(visible_distance),utils.parallaxmas_to_parsec(parallax))
-
-    get_nearby_stars(ra, dec, parallax, utils.light_years_to_parallaxmas(visible_distance), radius)
+    
+    get_nearby_stars(ra, dec, parallax, visible_distance, radius)
     verify_stars_within_radius(ra, dec, radius)
+   
