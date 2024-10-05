@@ -13,7 +13,6 @@ def get_star_details(designation):
     query = star_details_query.format(designation)
     job = Gaia.launch_job(query)
     result = job.get_results()
-    print(result)
     star_data = {
         "designation": result['DESIGNATION'][0],    # Designation id
         "ra": result['ra'][0],                      # Ascensión recta
@@ -23,14 +22,13 @@ def get_star_details(designation):
 
     return star_data
 
-def get_nearby_stars(ra, dec, parallax, visible_distance, n_stars):
+def get_nearby_stars(ra, dec, parsecs, visible_distance, n_stars):
     global temp_stars
     nearby_star_query = "SELECT TOP {} * FROM gaiadr3.gaia_source WHERE 1=CONTAINS(POINT('ICRS', gaiadr3.gaia_source.ra, gaiadr3.gaia_source.dec), CIRCLE('ICRS', {}, {}, {})) AND parallax > 0 AND distance_gspphot BETWEEN {} AND {} ORDER BY distance_gspphot DESC"
     
-    ly = utils.parallaxmas_to_light_years(parallax)
-    toleranceMin = utils.light_years_to_parsec(ly - visible_distance) if ly - visible_distance > 0 else 0
-    toleranceMax = utils.light_years_to_parsec(ly + visible_distance)
-    radius = utils.convert_parsecs_to_angle(utils.light_years_to_parsec(visible_distance),utils.parallaxmas_to_parsec(parallax))
+    toleranceMin = parsecs - utils.light_years_to_parsec(visible_distance) if parsecs - utils.light_years_to_parsec(visible_distance) > 0 else 0
+    toleranceMax = utils.light_years_to_parsec(visible_distance) + parsecs
+    radius = utils.convert_parsecs_to_angle(utils.light_years_to_parsec(visible_distance), parsecs)
   
     # El radio no puede ser mayor a 90 grados acorde a la información de gai
     if radius > 90:
