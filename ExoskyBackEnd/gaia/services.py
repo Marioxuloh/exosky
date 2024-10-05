@@ -13,11 +13,12 @@ def get_star_details(designation):
     query = star_details_query.format(designation)
     job = Gaia.launch_job(query)
     result = job.get_results()
-
+    print(result)
     star_data = {
-        "ra": result['ra'][0],            # Ascensión recta
-        "dec": result['dec'][0],          # Declinación
-        "parallax": result['parallax'][0] # Paralaje
+        "designation": result['DESIGNATION'][0],    # Designation id
+        "ra": result['ra'][0],                      # Ascensión recta
+        "dec": result['dec'][0],                    # Declinación
+        "parallax": result['parallax'][0]           # Paralaje
     }
 
     return star_data
