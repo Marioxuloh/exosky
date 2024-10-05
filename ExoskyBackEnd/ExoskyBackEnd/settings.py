@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "users",
     "exoplanets",
     "gaia",
+    "constellations",
 ]
 
 MIDDLEWARE = [

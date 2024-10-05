@@ -22,4 +22,5 @@ urlpatterns = [
     path('gaia/', include('gaia.urls')),
     path('exoplanets/', include('exoplanets.urls')),
     path('users/', include('users.urls')),
+    path('constellations/', include('constellations.urls')),
 ]
