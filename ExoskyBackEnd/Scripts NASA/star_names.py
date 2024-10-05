@@ -12,11 +12,11 @@ def get_star_name(gaiaRD2):
         return gaiaRD2
 
     # Obtener el nombre común
-    nombres = result_table['IDS'][0].decode('utf-8').split('|')
-    nombre_comun = nombres[0] if nombres else gaiaRD2
+    nombre = result_table['MAIN_ID'][0].split('NAME')[-1].strip()
 
-    return nombre_comun
+    return nombre
 
 # Test Script
 if __name__ == "__main__":
-    get_star_name("")
+    print(get_star_name("Gaia DR2 5853498713160606720"))
+    print(get_star_name("Gaia DR2 1693159194226600192"))

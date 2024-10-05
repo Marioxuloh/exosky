@@ -1,4 +1,7 @@
+from dotenv import load_dotenv
+
 import requests
+import os
 
 def get_exoplanets_data():
     url_exoplanets = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync'
@@ -18,5 +21,10 @@ def get_exoplanets_data():
         # Obtener los datos en formato JSON
         return response.json()
     else:
-        return {"error": "No se pudo obtener la data de Gaia"}
+        return {"error": "No se pudo obtener la data de Exoplanet Archive"}
 
+
+#Test script
+if __name__ == "__main__":
+    load_dotenv()
+    print(get_exoplanets_data())

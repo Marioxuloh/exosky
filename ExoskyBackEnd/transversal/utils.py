@@ -71,13 +71,12 @@ def add_dataframe_xyz(df):
     # Extrae las coordenadas de las estrellas y calcula las distancias
     ra = df['ra']
     dec = df['dec']
-    parallax = df['parallax']
-    distance = 1000 / parallax  # Convertir paralaje a distancia en parsecs
+    distance = df['distance_gspphot']
 
     # Convertir coordenadas esféricas a cartesianas
-    x = distance * np.cos(np.radians(dec)) * np.cos(np.radians(ra))
-    y = distance * np.cos(np.radians(dec)) * np.sin(np.radians(ra))
-    z = distance * np.sin(np.radians(dec))
+    x = distance * np.cos(np.deg2rad(dec)) * np.cos(np.deg2rad(ra))
+    y = distance * np.cos(np.deg2rad(dec)) * np.sin(np.deg2rad(ra))
+    z = distance * np.sin(np.deg2rad(dec))
     
     # Agregar las columnas calculadas al DataFrame
     df['X'] = x
@@ -85,6 +84,21 @@ def add_dataframe_xyz(df):
     df['Z'] = z
     
     return df
+
+def translate_sphere_mode(df, r):
+    x, y, z = df['X'], df['Y'], df['Z']
+
+    magnitude = np.sqrt(x**2 + y**2 + z**2)
+    x_new = r * (x / magnitude)
+    y_new = r * (y / magnitude)
+    z_new = r * (z / magnitude)
+    
+    df['X_sphere'] = x_new
+    df['Y_sphere'] = y_new
+    df['Z_sphere'] = z_new
+
+    return df
+
 
 # Añadir al dataframe las coordenadas cartecianas de un punto
 def convert_skypoint_to_cartesian(ra, dec, distance):
@@ -144,9 +158,4 @@ if __name__ == "__main__":
     print(f"Convert Skypoint To Cartesian: {convert_skypoint_to_cartesian(15, 15, 15)}")
     print(f"Add Dataframe xyz: \n {add_dataframe_xyz(pd.DataFrame({ 'ra': [15], 'dec': [15], 'parallax': [15]}))}")
     print(f"Change Cartesian Reference Point: \n {change_cartesian_reference_point(15, 15, 15, pd.DataFrame({ 'X': [15], 'Y': [15], 'Z': [15]}))}")
-    
-    
-    
-    print(f"{parsec_to_light_year(36165.09)}")
-    
-    # Distancia angular 0.758139534883721
+    print(f"Translate to sphere: \n {translate_sphere_mode(pd.DataFrame({ 'X': [15], 'Y': [15], 'Z': [15]}), 10)}")
