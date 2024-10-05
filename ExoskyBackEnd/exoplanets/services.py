@@ -2,7 +2,7 @@ import requests
 
 def get_exoplanets_data():
     url_exoplanets = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync'
-    query_all_exoplanets_name = "SELECT pl_name, hostname, gaia_id, ra, dec, glon, glat, sy_dist, sy_snum, sy_pnum, sy_mnum, cb_flag FROM ps"
+    query_all_exoplanets_name = "SELECT pl_name, hostname, gaia_id, ra, dec, sy_dist, disc_year, discoverymethod, disc_facility FROM ps"
 
     # Parámetros de la solicitud
     params = {
