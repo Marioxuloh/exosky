@@ -1,0 +1,353 @@
+{
+	"info": {
+		"_postman_id": "1970c025-9d64-4724-9d3e-3ff75fbd0552",
+		"name": "exosky",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27229792"
+	},
+	"item": [
+		{
+			"name": "exoplanets",
+			"item": [
+				{
+					"name": "getallandsave exoplanets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://172.20.10.2:8000/exoplanets/getallandsave/",
+							"protocol": "http",
+							"host": [
+								"172",
+								"20",
+								"10",
+								"2"
+							],
+							"port": "8000",
+							"path": [
+								"exoplanets",
+								"getallandsave",
+								""
+							]
+						},
+						"description": "Generated from cURL: curl -X GET http://127.0.0.1:8000/exoplanets/getall/"
+					},
+					"response": []
+				},
+				{
+					"name": "getall exoplanets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://172.20.10.2:8000/exoplanets/getallfrombd/",
+							"protocol": "http",
+							"host": [
+								"172",
+								"20",
+								"10",
+								"2"
+							],
+							"port": "8000",
+							"path": [
+								"exoplanets",
+								"getallfrombd",
+								""
+							]
+						},
+						"description": "Generated from cURL: curl -X GET http://127.0.0.1:8000/exoplanets/getall/"
+					},
+					"response": []
+				},
+				{
+					"name": "getrandom exoplanets",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"limit\": 100\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://172.20.10.2:8000/exoplanets/getrandomfrombd/",
+							"protocol": "http",
+							"host": [
+								"172",
+								"20",
+								"10",
+								"2"
+							],
+							"port": "8000",
+							"path": [
+								"exoplanets",
+								"getrandomfrombd",
+								""
+							]
+						},
+						"description": "Generated from cURL: curl -X POST http://127.0.0.1:8000/users/login/ \\   \n-H \"Content-Type: application/json\" \\\n-d '{\"first_name\": \"usuario1\", \"password\": \"1234\"}'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "gaia",
+			"item": [
+				{
+					"name": "star details",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"star_designations\": [\"Gaia DR2 1693159194226600192\", \"Gaia DR2 4056443366649948160\", \"Gaia DR2 4792774797545105664\"]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/gaia/stardetails/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"gaia",
+								"stardetails",
+								""
+							]
+						},
+						"description": "Generated from cURL: curl -X POST http://127.0.0.1:8000/users/login/ \\   \n-H \"Content-Type: application/json\" \\\n-d '{\"first_name\": \"usuario1\", \"password\": \"1234\"}'"
+					},
+					"response": []
+				},
+				{
+					"name": "nearby stars",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ra\": 217.39346574260355,\n    \"dec\": -62.67618210292382,\n    \"parsecs\": 25,\n    \"visible_distance\": 1000,\n    \"n_stars\": 1\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/gaia/nearbystars/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"gaia",
+								"nearbystars",
+								""
+							]
+						},
+						"description": "Generated from cURL: curl -X POST http://127.0.0.1:8000/users/login/ \\   \n-H \"Content-Type: application/json\" \\\n-d '{\"first_name\": \"usuario1\", \"password\": \"1234\"}'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"marito\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://172.20.10.2:8000/users/login/",
+							"protocol": "http",
+							"host": [
+								"172",
+								"20",
+								"10",
+								"2"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"login",
+								""
+							]
+						},
+						"description": "Generated from cURL: curl -X POST http://127.0.0.1:8000/users/login/ \\   \n-H \"Content-Type: application/json\" \\\n-d '{\"first_name\": \"usuario1\", \"password\": \"1234\"}'"
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"marito2\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/register/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"register",
+								""
+							]
+						},
+						"description": "Generated from cURL: curl -X POST http://127.0.0.1:8000/users/registro/ \\\n-H \"Content-Type: application/json\" \\\n-d '{\"first_name\": \"usuario1\", \"email\": \"usuario1@ejemplo.com\", \"password\": \"1234\"}'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "constellations",
+			"item": [
+				{
+					"name": "constellations by exoplanet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pl_name\": \"HD 12661 b\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/constellations/constellationsbyexoplanet/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"constellations",
+								"constellationsbyexoplanet",
+								""
+							]
+						},
+						"description": "Generated from cURL: curl -X POST http://127.0.0.1:8000/users/login/ \\   \n-H \"Content-Type: application/json\" \\\n-d '{\"first_name\": \"usuario1\", \"password\": \"1234\"}'"
+					},
+					"response": []
+				},
+				{
+					"name": "insert constellation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_name\": \"marito\",\n  \"pl_name\": \"HD 12661 b\",\n  \"coordenates\": [\"fdgfdgdfg\", \"sgdfdytetyfdh\"]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/constellations/constellationinsert/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"constellations",
+								"constellationinsert",
+								""
+							]
+						},
+						"description": "Generated from cURL: curl -X POST http://127.0.0.1:8000/users/login/ \\   \n-H \"Content-Type: application/json\" \\\n-d '{\"first_name\": \"usuario1\", \"password\": \"1234\"}'"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
