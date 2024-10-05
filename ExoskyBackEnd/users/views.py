@@ -19,7 +19,7 @@ class LoginUserView(APIView):
         serializer = LoginUsuarioSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                usuario = User.objects.get(first_name=serializer.data['first_name'], password=serializer.data['password'])
+                usuario = User.objects.get(name=serializer.data['name'])
                 return Response({"mensaje": "Login exitoso"}, status=status.HTTP_200_OK)
             except User.DoesNotExist:
                 return Response({"error": "Usuario o contraseña incorrectos"}, status=status.HTTP_400_BAD_REQUEST)
