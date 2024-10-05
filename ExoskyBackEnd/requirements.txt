@@ -9,3 +9,4 @@ pillow==10.4.0
 requests==2.32.3
 sqlparse==0.5.1
 urllib3==2.2.3
+dotenv

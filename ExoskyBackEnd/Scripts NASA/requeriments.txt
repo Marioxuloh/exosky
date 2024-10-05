@@ -1,0 +1,6 @@
+python-dotenv
+astroquery
+astropy
+matplotlib
+numpy
+pandas

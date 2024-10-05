@@ -12,6 +12,7 @@ def get_nearby_stars(ra, dec, parallax, visible_distance, radius):
     nearby_star_query = os.getenv('NEARBY_STAR_QUERY')
     
     ly = utils.parallaxmas_to_light_years(parallax)
+    distanceParsec = utils.light_years_to_parsec(ly)
     toleranceMin = utils.light_years_to_parsec(ly - visible_distance) if ly - visible_distance > 0 else 0
     toleranceMax = utils.light_years_to_parsec(ly + visible_distance)
      
@@ -20,7 +21,7 @@ def get_nearby_stars(ra, dec, parallax, visible_distance, radius):
         radius = 90
 
     # Consulta a la base de datos de Gaia
-    query = nearby_star_query.format(ra, dec, radius, toleranceMin, toleranceMax)
+    query = nearby_star_query.format(distanceParsec, ra, dec, radius, toleranceMin, toleranceMax)
 
     job = Gaia.launch_job(query)
     result = job.get_results()
