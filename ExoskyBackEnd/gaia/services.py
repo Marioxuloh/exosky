@@ -1,10 +1,7 @@
 from astroquery.gaia import Gaia
-from dotenv import load_dotenv
 from astropy.coordinates import SkyCoord
-
 import astropy.units as u
 import transversal.utils as utils
-
 import os
 
 def get_star_details(designation):
