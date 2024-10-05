@@ -12,16 +12,17 @@ def get_star_details(designation):
     job = Gaia.launch_job(query)
     result = job.get_results()
     star_data = {
-        "designation": result['DESIGNATION'][0],    # Designation id
-        "ra": result['ra'][0],                      # Ascensión recta
-        "dec": result['dec'][0],                    # Declinación
-        "parallax": result['parallax'][0]           # Paralaje
+        "designation": result['DESIGNATION'][0],        # Designation id
+        "ra": result['ra'][0],                          # Ascensión recta
+        "dec": result['dec'][0],                        # Declinación
+        "parallax": result['parallax'][0],              # Paralaje
+        "phot_g_mean_mag": result['phot_g_mean_mag'][0] # Paralaje
     }
 
     return star_data
 
-def get_nearby_stars(ra, dec, parsecs, visible_distance_ly, n_stars):
-    nearby_star_query = "SELECT TOP {} ABS(distance_gspphot - {}) AS dist_central, designation, ra, dec, distance_gspphot, parallax, pseudocolour, phot_g_mean_flux, phot_bp_mean_flux, phot_rp_mean_flux FROM gaiadr3.gaia_source WHERE 1=CONTAINS(POINT('ICRS', gaiadr3.gaia_source.ra, gaiadr3.gaia_source.dec), CIRCLE('ICRS', POINT({}, {}), {})) AND parallax > 0 AND distance_gspphot BETWEEN {} AND {} ORDER BY dist_central"
+def get_nearby_stars(ra, dec, parsecs, visible_distance_ly, n_stars, phot_g_mean_mag):
+    nearby_star_query = "SELECT TOP {} ABS(distance_gspphot - {}) AS dist_central, designation, ra, dec, distance_gspphot, parallax, pseudocolour, phot_g_mean_mag, phot_g_mean_flux, phot_bp_mean_flux, phot_rp_mean_flux, bp_rp FROM gaiadr3.gaia_source WHERE 1=CONTAINS(POINT('ICRS', gaiadr3.gaia_source.ra, gaiadr3.gaia_source.dec), CIRCLE('ICRS', POINT({}, {}), {})) AND parallax > 0 AND distance_gspphot BETWEEN {} AND {} AND phot_g_mean_mag < {} ORDER BY dist_central"
     
     visible_distance_parsecs = utils.light_years_to_parsec(visible_distance_ly)
     toleranceMin = parsecs - visible_distance_parsecs if parsecs - visible_distance_parsecs > 0 else 0
@@ -34,7 +35,7 @@ def get_nearby_stars(ra, dec, parsecs, visible_distance_ly, n_stars):
         radius = 90
 
     # Consulta a la base de datos de Gaia
-    query = nearby_star_query.format(n_stars, parsecs, ra, dec, radius, toleranceMin, toleranceMax)
+    query = nearby_star_query.format(n_stars, parsecs, ra, dec, radius, toleranceMin, toleranceMax, phot_g_mean_mag + 7)
     job = Gaia.launch_job(query)
     stars = job.get_results()
 

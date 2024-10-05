@@ -67,16 +67,18 @@ result = gaia.get_star_details("Gaia DR2 1693159194226600192")
 ra = result['ra']
 dec = result['dec']
 parallax = result['parallax']
+phot_g_mean_mag = result['phot_g_mean_mag']
 
 # ra = 0
 # dec = 0
 # parallax = 768.5003653333918
+# phot_g_mean_mag = 
 
 parsecs = utils.parallaxmas_to_parsec(parallax)
 
 pointX, pointY, pointZ = utils.convert_skypoint_to_cartesian(ra, dec, parsecs)
 
-stars = gaia.get_nearby_stars(ra, dec, parsecs, visible_distance, n_stars)
+stars = gaia.get_nearby_stars(ra, dec, parsecs, visible_distance, n_stars, phot_g_mean_mag)
 
 stars = utils.add_dataframe_xyz(stars)
 show_3d_space(stars, f"Stars view from earth {len(stars)}")
