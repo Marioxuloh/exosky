@@ -60,11 +60,8 @@ def light_years_to_angular_distance(distance_ly):
     return 1 / parsec
 
 # Convertir años luz en radio para la consulta, valores en parsecs
-def convert_parsecs_to_angle(width, distance):
-    # C opuesto
-    radio = width / 2
-    
-    return (radio / distance) * (180 / math.pi)
+def convert_parsecs_to_angle(A, O):    
+    return math.degrees(math.atan(O/A))
 
 # Añadir al dataframe las coordenadas cartecianas de un punto
 def add_dataframe_xyz(df):    
@@ -103,15 +100,10 @@ def translate_sphere_mode(df, r):
 # Añadir al dataframe las coordenadas cartecianas de un punto
 def convert_skypoint_to_cartesian(ra, dec, distance):
     # Crear un objeto SkyCoord con las coordenadas RA, Dec y paralaje
-    coords = SkyCoord(ra=ra * u.degree,
-                      dec=dec * u.degree,
-                      distance=distance * u.pc,  # Convertir paralaje a distancia en parsecs
-                      frame='icrs')
     
-    # Obtener las coordenadas cartesianas en parsecsn
-    x = coords.cartesian.x.value
-    y = coords.cartesian.y.value
-    z = coords.cartesian.z.value
+    x = distance * np.cos(np.deg2rad(dec)) * np.cos(np.deg2rad(ra))
+    y = distance * np.cos(np.deg2rad(dec)) * np.sin(np.deg2rad(ra))
+    z = distance * np.sin(np.deg2rad(dec))
     
     # Agregar las columnas calculadas al DataFrame
     return x, y, z
@@ -126,20 +118,9 @@ def change_cartesian_reference_point(x, y, z, df):
     return df
 
 def clear_extra_points(df, parsec):
-    # Calculamos la distancia al centro (0, 0, 0)
-    distancias = np.sqrt(df['X']**2 + df['Y']**2 + df['Z']**2)
+    distance = np.sqrt(df['X']**2 + df['Y']**2 + df['Z']**2)
 
-    # Filtramos los puntos que están a 1.5 o menos del centro
-    df_filtrado = df[distancias <= parsec]
-    
-    return df_filtrado
-
-def clear_extra_points2(df, parsec):
-    # Calculamos la distancia al centro (0, 0, 0)
-    distancias = np.sqrt(df['X']**2 + df['Y']**2 + df['Z']**2)
-
-    # Filtramos los puntos que están a 1.5 o menos del centro
-    df_filtrado = df[distancias <= parsec/2]
+    df_filtrado = df[distance <= parsec]
     
     return df_filtrado
 

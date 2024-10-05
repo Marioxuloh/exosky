@@ -17,6 +17,7 @@ def get_nearby_stars(ra, dec, parallax, visible_distance, radius):
     toleranceMax = utils.light_years_to_parsec(ly + visible_distance)
      
     # El radio no puede ser mayor a 90 grados acorde a la información de gai
+    radius = utils.convert_parsecs_to_angle(visible_distance, parsecs)
     if radius > 90:
         radius = 90
 

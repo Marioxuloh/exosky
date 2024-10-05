@@ -54,11 +54,12 @@ def light_years_to_angular_distance(distance_ly):
     return 1 / parsec
 
 # Convertir años luz en radio para la consulta, valores en parsecs
-def convert_parsecs_to_angle(width, distance):
+def convert_parsecs_to_angle(R, A):
     # C opuesto
-    radio = width / 2
+    O = R / 2
+    H = math.sqrt(math.pow(O,2) + math.pow(A,2))
     
-    return (radio / distance) * (180 / math.pi)
+    return math.degrees(np.arcsin(O/H))
 
 # Añadir al dataframe las coordenadas cartecianas de un punto
 def add_dataframe_xyz(df):    
