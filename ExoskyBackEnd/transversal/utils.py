@@ -11,6 +11,11 @@ def sanitize_float(value):
         return None
     return value
 
+def sanitize_int(value):
+    if isinstance(value, int) and (math.isnan(value) or math.isinf(value)):
+        return None
+    return int(value)
+
 # Paralaje en milisegundos de arco a años luz
 def parallaxmas_to_light_years(parallax_mas):
     # Convertir paralaje a segundos de arco
@@ -93,6 +98,8 @@ def translate_sphere_mode(df, r):
     df['X_sphere'] = x_new
     df['Y_sphere'] = y_new
     df['Z_sphere'] = z_new
+
+    df["distance_gspphot_exoplanet"] = np.sqrt(x**2 + y**2 + z**2)
 
     return df
 
