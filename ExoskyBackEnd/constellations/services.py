@@ -1,7 +1,6 @@
 from .models import Constellation
 from exoplanets.models import Exoplanet
 from users.models import User
-import json
 
 def get_constellations(pl_name):
     try:
@@ -20,7 +19,10 @@ def get_constellations(pl_name):
                 'coordenates': constellation.coordenates,
             })
 
-        return result  # Devolver la lista de diccionarios
+        return {
+            'result': result
+        }
+
     except Exoplanet.DoesNotExist:
         return {"error": "Exoplanet not found."}
 
