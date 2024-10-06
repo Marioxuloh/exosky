@@ -79,7 +79,7 @@ parsecs = utils.parallaxmas_to_parsec(parallax)
 
 pointX, pointY, pointZ = utils.convert_skypoint_to_cartesian(ra, dec, parsecs)
 
-stars = gaia.get_nearby_stars(ra, dec, parsecs, visible_distance, n_stars, phot_g_mean_mag)
+stars = gaia.get_nearby_stars(ra, dec, parsecs, visible_distance, n_stars)
 
 stars = utils.add_dataframe_xyz(stars)
 show_3d_space(stars, f"Stars view from earth {len(stars)}")
