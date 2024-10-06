@@ -29,9 +29,13 @@ Para ejecutar la aplicación de forma local, necesitarás tener **Docker Compose
    ```
    Este comando construirá las imágenes de Docker, creará los contenedores y los iniciará.
 
+4. **Inicia la aplicación:**
+   ```bash
+   curl -X GET http://localhost:8000/exoplanets/getallandsave/
+   ```
+   Este comando guardara los datos de los exoplanetas en base de datos para no tener que hacer muchas llamadas a Exoplanet Archive(es lento)
+
 ### Próximos Pasos
 
-* **LLamada api:** hacer esta llamada curl -X GET http://localhost:8000/exoplanets/getallandsave/, iniciar con esto para llenar 
-la base de datos propia con datos de exoplanetas
 * **Probar la aplicacion web:** Se despliega en la direccion http://localhost:8080 
 * **Explora el código:** Profundiza en el código de cada parte del proyecto.
