@@ -75,6 +75,7 @@ def starsModeSphereWhitRGBFunc(starsModeSphereWhitoutHighAparentMag):
     kelvin = bp_rp_to_kelvin(bp_rp)
     r, g, b = kelvin_to_rgb(kelvin)
     starsModeSphereWhitoutHighAparentMag['kelvin_aprox_max9'] = kelvin
+    r, g, b = adjust_rgb_from_brightness(r, g, b, starsModeSphereWhitoutHighAparentMag['aparent_mag_exoplanet'], 0.25, 10)
     starsModeSphereWhitoutHighAparentMag['color_r'] = r
     starsModeSphereWhitoutHighAparentMag['color_g'] = g
     starsModeSphereWhitoutHighAparentMag['color_b'] = b
@@ -112,4 +113,17 @@ def kelvin_to_rgb(kelvin):
                                            138.5177312231 * np.log(kelvin - 10) - 305.0447927307))
     b = np.clip(b, 0, 255)
 
-    return r.astype(int), g.astype(int), b.astype(int)
+    return (r / 255.0).astype(float), (g / 255.0).astype(float), (b / 255.0).astype(float)
+
+def adjust_rgb_from_brightness(r, g, b, aparent_mag_exoplanet, lim_inf, max_aparent_mag_exoplanet):
+    r, g, b = np.array(r), np.array(g), np.array(b)
+    
+    adjusting = aparent_mag_exoplanet / max_aparent_mag_exoplanet
+    
+    adjusting = np.maximum(adjusting, lim_inf)
+    
+    r = r * adjusting**3
+    g = g * adjusting**3
+    b = b * adjusting**3
+    
+    return r, g, b
