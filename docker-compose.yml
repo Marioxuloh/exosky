@@ -20,7 +20,7 @@ services:
       DB_PASSWORD: beekeeperspass
       DB_HOST: db
     networks:
-      - webnet
+      - exoskynet
 
   db:
     image: mysql:8.0
@@ -35,7 +35,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     networks:
-      - webnet
+      - exoskynet
 
   webgl:
     image: nginx:alpine
@@ -45,10 +45,10 @@ services:
     ports:
       - "8080:80"
     networks:
-      - webnet
+      - exoskynet
 
 networks:
-  webnet:
+  exoskynet:
     driver: bridge
 
 volumes:
