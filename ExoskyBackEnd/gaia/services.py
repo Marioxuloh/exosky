@@ -45,7 +45,7 @@ def get_nearby_stars(ra, dec, parsecs, visible_distance_ly, n_stars):
     stars = utils.add_dataframe_xyz(stars)
     starsCenter = utils.change_cartesian_reference_point(pointX, pointY, pointZ, stars)
     starsClear = utils.clear_extra_points(starsCenter, visible_distance_parsecs)
-    starsModeSphere = utils.translate_sphere_mode(starsClear, 100)
+    starsModeSphere = utils.translate_sphere_mode(starsClear, 150)
     starsModeSphereWhitoutHighAparentMag = starsModeSphereWhitoutHighAparentMagFunc(starsModeSphere)
     starsModeSphereWhitRGB = starsModeSphereWhitRGBFunc(starsModeSphereWhitoutHighAparentMag)
 
