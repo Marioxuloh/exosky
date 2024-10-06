@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  django:
+    build: ./ExoskyBackEnd
+    container_name: django_app
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./ExoskyBackEnd:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DB_NAME: exosky
+      DB_USER: beekeepers
+      DB_PASSWORD: beekeeperspass
+      DB_HOST: db
+    networks:
+      - webnet
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_DATABASE: exosky
+      MYSQL_USER: beekeepers
+      MYSQL_PASSWORD: beekeeperspass
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - webnet
+
+  webgl:
+    image: nginx:alpine
+    container_name: webgl_frontend
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    ports:
+      - "8080:80"
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    driver: bridge
+
+volumes:
+  db_data:

@@ -55,17 +55,13 @@ def get_exoplanets_data():
     return list(exoplanets.values('pl_name', 'hostname', 'gaia_id', 'ra', 'dec', 'sy_dist', 'disc_year', 'discoverymethod', 'disc_facility'))
 
 def get_random_exoplanets_data(limit):
-
-    # Obtener una lista aleatoria de exoplanetas limitando el resultado
     exoplanets = Exoplanet.objects.order_by('?')[:limit]
-    
-    # Convertir a una lista de diccionarios con los campos seleccionados
     return list(exoplanets.values('pl_name', 'hostname', 'gaia_id', 'ra', 'dec', 'sy_dist', 'disc_year', 'discoverymethod', 'disc_facility'))
 
 def get_exoplanets_by_id(pl_name):
     try:
         exoplanet = Exoplanet.objects.filter(pl_name=pl_name).values('pl_name', 'hostname', 'gaia_id', 'ra', 'dec', 'sy_dist', 'disc_year', 'discoverymethod', 'disc_facility').first()
-        return exoplanet  # Esto devolverá un diccionario o None si no se encuentra
+        return exoplanet
     except Exception as e:
         print(f"Error: {e}")
         return None

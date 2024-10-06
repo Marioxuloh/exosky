@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "exoplanets",
     "gaia",
     "constellations",
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'ExoskyBackEnd.urls'
@@ -82,7 +84,7 @@ DATABASES = {
         'NAME': 'exosky',  # Debe coincidir con el nombre en docker-compose
         'USER': 'beekeepers',      # Debe coincidir con el nombre en docker-compose
         'PASSWORD': 'beekeeperspass',  # Debe coincidir con el nombre en docker-compose
-        'HOST': '127.0.0.1',
+        'HOST': 'db',
         'PORT': '3306',
     }
 }
@@ -127,3 +129,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOW_ALL_ORIGINS = True
