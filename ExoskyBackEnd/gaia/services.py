@@ -45,7 +45,7 @@ def get_nearby_stars(ra, dec, parsecs, visible_distance_ly, n_stars):
     stars = utils.add_dataframe_xyz(stars)
     starsCenter = utils.change_cartesian_reference_point(pointX, pointY, pointZ, stars)
     starsClear = utils.clear_extra_points(starsCenter, visible_distance_parsecs)
-    starsModeSphere = utils.translate_sphere_mode(starsClear, 1)
+    starsModeSphere = utils.translate_sphere_mode(starsClear, 100)
     starsModeSphereWhitoutHighAparentMag = starsModeSphereWhitoutHighAparentMagFunc(starsModeSphere)
     starsModeSphereWhitRGB = starsModeSphereWhitRGBFunc(starsModeSphereWhitoutHighAparentMag)
 
@@ -54,6 +54,8 @@ def get_nearby_stars(ra, dec, parsecs, visible_distance_ly, n_stars):
 ############## scripts ##############
 
 def starsModeSphereWhitoutHighAparentMagFunc(starsModeSphere):
+    min_value_view = 10
+
     phot_g_mean_mag = starsModeSphere['phot_g_mean_mag']
     distance_gspphot = starsModeSphere['distance_gspphot']
     distance_gspphot_exoplanet = starsModeSphere['distance_gspphot_exoplanet']
@@ -62,8 +64,10 @@ def starsModeSphereWhitoutHighAparentMagFunc(starsModeSphere):
     aparent_mag_exoplanet = aparent_mag_from_exoplanet(absolute_mag_star, distance_gspphot_exoplanet)
 
     starsModeSphere['aparent_mag_exoplanet'] = aparent_mag_exoplanet
+    
+    starsModeSphere['radius_sphere'] = (starsModeSphere['aparent_mag_exoplanet'] * 0.5) / 5
 
-    return starsModeSphere[starsModeSphere['aparent_mag_exoplanet'] < 6]
+    return starsModeSphere[starsModeSphere['aparent_mag_exoplanet'] < min_value_view]
 
 def starsModeSphereWhitRGBFunc(starsModeSphereWhitoutHighAparentMag):
     ## bp_rp

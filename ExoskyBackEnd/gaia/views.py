@@ -14,7 +14,7 @@ class GaiaStarDetailsView(APIView):
         return Response(data)
 
 class GaiaNearbyStarsView(APIView):
-    def post(self, request):
+    def post(self, request):        
         ra = request.data.get('ra')
         dec = request.data.get('dec')
         parsecs = request.data.get('parsecs')
@@ -24,5 +24,6 @@ class GaiaNearbyStarsView(APIView):
         dec = utils.sanitize_float(dec)
         parsecs = utils.sanitize_float(parsecs)
         visible_distance = utils.sanitize_float(visible_distance)
+        n_stars = utils.sanitize_int(n_stars)
         nearby_stars = get_nearby_stars(ra, dec, parsecs, visible_distance, n_stars)
         return Response(nearby_stars)

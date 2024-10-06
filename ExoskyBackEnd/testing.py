@@ -25,14 +25,15 @@ def show_3d_space(stars, title):
 def show_3d_space_delete(stars, starsDelete, title):
     # Crear el gráfico
     fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.scatter(stars['X'], stars['Z'], c="y", s=1)
-    ax.scatter(starsDelete['X'], starsDelete['Z'], c="r", s=1)
-    ax.scatter(0, 0, c='b', s=5)
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(stars['X_sphere'], stars['Y_sphere'], stars['Z_sphere'], c="y", s=1)
+    ax.scatter(starsDelete['X_sphere'], starsDelete['Y_sphere'], starsDelete['Z_sphere'], c="r", s=1)
+    ax.scatter(0, 0, 0, c='b', s=5)
 
     # Etiquetas de los ejes
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
     ax.set_title(title)
 
     # Mostrar el gráfico
@@ -91,7 +92,7 @@ show_3d_space(starsClear, f"Stars clear {len(starsClear)}")
 
 show_3d_space_delete(starsClear, pd.concat([starsCenter.to_pandas(), starsClear.to_pandas()]).drop_duplicates(keep=False), f"Stars cleared {len(starsClear)}")
 
-starsModeSphere = utils.translate_sphere_mode(starsClear, 1)
+starsModeSphere = utils.translate_sphere_mode(starsClear, 100)
 show_3d_space_sphere(starsModeSphere, f"Sphere View {len(starsModeSphere)}")
 
 input("...")
