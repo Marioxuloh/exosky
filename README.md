@@ -21,7 +21,7 @@ Para ejecutar la aplicación de forma local, necesitarás tener **Docker Compose
    ```
 2. **Accede al directorio del proyecto:**
    ```bash
-   cd tu-proyecto
+   cd exosky
    ```
 3. **Inicia la aplicación:**
    ```bash
@@ -31,5 +31,7 @@ Para ejecutar la aplicación de forma local, necesitarás tener **Docker Compose
 
 ### Próximos Pasos
 
+* **LLamada api:** hacer esta llamada curl -X GET http://localhost:8000/exoplanets/getallandsave/, iniciar con esto para llenar 
+la base de datos propia con datos de exoplanetas
 * **Probar la aplicacion web:** Se despliega en la direccion http://localhost:8080 
 * **Explora el código:** Profundiza en el código de cada parte del proyecto.
