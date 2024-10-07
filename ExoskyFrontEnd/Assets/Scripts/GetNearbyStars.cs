@@ -125,10 +125,10 @@ public class GetNearbyStars : MonoBehaviour
 
                 // Cambiar el color de la esfera usando los valores de color_r, color_g, color_b
                 Material material = new Material(Shader.Find("Custom/SimpleShader"));
-                sphere.GetComponent<Renderer>().material = material;
+                material.color = new Color(this.starPositions.color_r[i], this.starPositions.color_g[i], this.starPositions.color_b[i]);
+                // Asignar el material al renderer de la esfera
                 Renderer sphereRenderer = sphere.GetComponent<Renderer>();
-                sphereRenderer.material.color = new Color(this.starPositions.color_r[i], this.starPositions.color_g[i], this.starPositions.color_b[i]);
-
+                sphereRenderer.material = material;
                 // Hacer de "CenterStars" el padre de la esfera
                 sphere.transform.parent = centerStars;
             }

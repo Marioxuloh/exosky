@@ -152,7 +152,7 @@ public class ClickStar : MonoBehaviour
                     float distance = direction.magnitude;
                     line.transform.localScale = new Vector3(0.1f, distance / 2, 0.1f);
                     line.transform.up = direction.normalized;
-                    line.GetComponent<Renderer>().material = new Material(Shader.Find("Custom/SimpleShader"));;
+                    line.GetComponent<Renderer>().material = new Material(Shader.Find("Custom/SimpleShader"));
                     guide.line = line;
                     guide.isCreated = true;
                 }
@@ -292,7 +292,7 @@ public class ClickStar : MonoBehaviour
                     float distance = direction.magnitude;
                     line.transform.localScale = new Vector3(0.1f, distance / 2, 0.1f);
                     line.transform.up = direction.normalized;
-
+                    line.GetComponent<Renderer>().material = new Material(Shader.Find("Custom/SimpleShader"));
                     guide.line = line;
                     guide.isCreated = true;
                 }
