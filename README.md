@@ -37,7 +37,7 @@ To run the application locally, you'll need to have **Docker Compose** installed
 
 ### **Next Steps**
 
-* **Test the web application:** It's deployed at http://localhost:8080
+* **Test the web application:** It's deployed at http://localhost:8082
 * **Explore the code:** Delve deeper into the code of each part of the project.
 
 ## **Technical Breakdown**
