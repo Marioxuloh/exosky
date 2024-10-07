@@ -92,7 +92,8 @@ public class ClickStar : MonoBehaviour
 
         if(PlayerPrefs.GetString("onLoadStars", "") == "true")
         {
-            this.GetConstelars();
+            Debug.Log("Buscando constelaciones...");
+            StartCoroutine(GetConstelars());
             PlayerPrefs.SetString("onLoadStars", "false");
         }
     }
@@ -259,31 +260,26 @@ public class ClickStar : MonoBehaviour
         constellars.Add(new Constellar()); // Crear una constelación inicial
     }
 
-    private async void GetConstelars()
+    private IEnumerator GetConstelars()
     {
+        Exoplanet exoplanet = GlobalData.Exoplanets[0];
+
+        // Crear el contenido de la solicitud
+        var jsonData = JsonUtility.ToJson(new GetExoplanet{
+            pl_name = exoplanet.pl_name
+        });
+
+        Debug.Log(jsonData);
+
         // Create a new request to send the JSON to the backend
-        using (var client = new HttpClient())
+        using (UnityWebRequest www = UnityWebRequest.Post(urlConstellations, jsonData, "application/json"))
         {
-            // Configurar el cliente
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            // Crear el contenido de la solicitud
-            var content = new StringContent(JsonUtility.ToJson(new GetExoplanet{
-                pl_name = "Kepler-29 c"
-            }), Encoding.UTF8, "application/json");
-
-            Debug.Log(content);
+            yield return www.SendWebRequest();
 
             try
             {
-                // Enviar la solicitud POST
-                var response = await client.PostAsync(this.urlConstellations, content); // Reemplaza con tu URL de API
-
-                // Asegurarse de que la respuesta fue exitosa
-                response.EnsureSuccessStatusCode();
-
                 // Leer el contenido de la respuesta
-                var responseBody = await response.Content.ReadAsStringAsync();
+                var responseBody = www.downloadHandler.text;
 
                 this.CreateOldConnections(responseBody);
             }

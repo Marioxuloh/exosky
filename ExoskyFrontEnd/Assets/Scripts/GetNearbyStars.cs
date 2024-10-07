@@ -56,8 +56,9 @@ public class GetNearbyStars : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Console.WriteLine("Llamando el api");
-        GetStarsCloud();
+        Debug.Log("Llamando el api de estrellas");
+        StartCoroutine(GetStarsCloud());
+        Debug.Log("end el api de estrellas");
     }
 
     // Update is called once per frame
@@ -66,10 +67,15 @@ public class GetNearbyStars : MonoBehaviour
         
     }
 
-    private async void GetStarsCloud()
+    private IEnumerator GetStarsCloud()
     {
+        Debug.Log("Obteniendo exoplanet info");
         Exoplanet exoplanet = GlobalData.Exoplanets[0];
+
+        Debug.Log("Cargando material...");
         planet.GetComponent<Renderer>().material = new Material(exoplanet.material);
+
+        Debug.Log("Creando json");
         // Create the JSON data to send
         string jsonData = JsonUtility.ToJson(new CloudNearby
         { 
@@ -80,65 +86,66 @@ public class GetNearbyStars : MonoBehaviour
             n_stars = 5000
         });
 
-        // Create a new request to send the JSON to the backend
-        using (var client = new HttpClient())
+        Debug.Log("Obteniendo datos: ");
+        using (UnityWebRequest www = UnityWebRequest.Post(this.apiUrl, jsonData, "application/json"))
         {
-            // Configurar el cliente
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            Debug.Log(this.apiUrl);
+            Debug.Log(jsonData);
+            yield return www.SendWebRequest();
 
-            // Crear el contenido de la solicitud
-            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-            try
+            if (www.result != UnityWebRequest.Result.Success)
             {
-                // Enviar la solicitud POST
-                var response = await client.PostAsync(apiUrl, content);
-
-                // Asegurarse de que la respuesta fue exitosa
-                response.EnsureSuccessStatusCode();
-
-                // Leer el contenido de la respuesta
-                var responseBody = await response.Content.ReadAsStringAsync();
-                Debug.Log("Respuesta de la API: " + responseBody);
-
-                // Parsear el array de posiciones desde el JSON de la respuesta
-                this.starPositions = JsonUtility.FromJson<StarPosition>(responseBody);
-
-                int numStars = this.starPositions.X_sphere.Length;
-
-                Debug.Log("numStars: " + numStars);
-
-                // Crear esferas en las posiciones XYZ
-                for (int i = 0; i < numStars; i++)
-                {
-                    Vector3 position = new Vector3(this.starPositions.X_sphere[i], this.starPositions.Y_sphere[i], this.starPositions.Z_sphere[i]);
-
-                    GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-
-                    // Asignar el nombre usando DESIGNATION
-                    sphere.name = this.starPositions.DESIGNATION[i];
-
-                    // Crear una esfera en la posición especificada
-                    sphere.transform.position = position;
-
-                    // Ajustar la escala de la esfera usando radius_sphere
-                    float radius = this.starPositions.radius_sphere[i];
-                    sphere.transform.localScale = new Vector3(radius, radius, radius);
-
-                    // Cambiar el color de la esfera usando los valores de color_r, color_g, color_b
-                    Renderer sphereRenderer = sphere.GetComponent<Renderer>();
-                    sphereRenderer.material.color = new Color(this.starPositions.color_r[i], this.starPositions.color_g[i], this.starPositions.color_b[i]);
-
-                    // Hacer de "CenterStars" el padre de la esfera
-                    sphere.transform.parent = centerStars;
-                }
-
-                PlayerPrefs.SetString("onLoadStars", "true");
-                this.panelLoading.SetActive(false);
+                Debug.LogError(www.error);
             }
-            catch (HttpRequestException e)
+            else
             {
-                Debug.Log("Error en la solicitud: " + e.Message);
+                Debug.Log("Form upload complete!");
+
+                try
+                {
+                    // Leer el contenido de la respuesta
+                    var responseBody = www.downloadHandler.text;
+                    Debug.Log("Respuesta de la API: " + responseBody);
+
+                    // Parsear el array de posiciones desde el JSON de la respuesta
+                    this.starPositions = JsonUtility.FromJson<StarPosition>(responseBody);
+
+                    int numStars = this.starPositions.X_sphere.Length;
+
+                    Debug.Log("numStars: " + numStars);
+
+                    // Crear esferas en las posiciones XYZ
+                    for (int i = 0; i < numStars; i++)
+                    {
+                        Vector3 position = new Vector3(this.starPositions.X_sphere[i], this.starPositions.Y_sphere[i], this.starPositions.Z_sphere[i]);
+
+                        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+                        // Asignar el nombre usando DESIGNATION
+                        sphere.name = this.starPositions.DESIGNATION[i];
+
+                        // Crear una esfera en la posición especificada
+                        sphere.transform.position = position;
+
+                        // Ajustar la escala de la esfera usando radius_sphere
+                        float radius = this.starPositions.radius_sphere[i];
+                        sphere.transform.localScale = new Vector3(radius, radius, radius);
+
+                        // Cambiar el color de la esfera usando los valores de color_r, color_g, color_b
+                        Renderer sphereRenderer = sphere.GetComponent<Renderer>();
+                        sphereRenderer.material.color = new Color(this.starPositions.color_r[i], this.starPositions.color_g[i], this.starPositions.color_b[i]);
+
+                        // Hacer de "CenterStars" el padre de la esfera
+                        sphere.transform.parent = centerStars;
+                    }
+
+                    PlayerPrefs.SetString("onLoadStars", "true");
+                    this.panelLoading.SetActive(false);
+                }
+                catch (HttpRequestException e)
+                {
+                    Debug.Log("Error en la solicitud: " + e.Message);
+                }
             }
         }
     }
