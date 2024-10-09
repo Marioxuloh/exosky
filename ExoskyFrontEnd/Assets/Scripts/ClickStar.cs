@@ -226,7 +226,7 @@ public class ClickStar : MonoBehaviour
             try
             {
                 // Enviar la solicitud POST
-                var response = await client.PostAsync(this.url, content); // Reemplaza con tu URL de API
+                var response = await client.PostAsync(url, content); // Reemplaza con tu URL de API
 
                 // Asegurarse de que la respuesta fue exitosa
                 response.EnsureSuccessStatusCode();
