@@ -74,12 +74,9 @@ public class ClickStar : MonoBehaviour
     private GameObject selectedStarB;
     private Color originalColorA;
     private Color originalColorB;
-    private HttpClient client; // Cambiado a variable de instancia
 
     void Start()
     {
-        this.client = new HttpClient();
-        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         CreateInitialConstellar();
     }
 
@@ -194,7 +191,7 @@ public class ClickStar : MonoBehaviour
         panelSave.SetActive(false);
     }
 
-    private async void SendConstellarData()
+    private IEnumerator SendConstellarData()
     {
         // Solo obtener la última constelación creada
         var lastConstellar = constellars[constellars.Count - 1];
@@ -213,29 +210,17 @@ public class ClickStar : MonoBehaviour
 
         string jsonData = JsonUtility.ToJson(saveData);
 
-        Debug.Log(jsonData);
-
         // Create a new request to send the JSON to the backend
-        using (var client = new HttpClient())
+        using (UnityWebRequest www = UnityWebRequest.Post(url, jsonData, "application/json"))
         {
-            // Configurar el cliente
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            yield return www.SendWebRequest();
 
-            // Crear el contenido de la solicitud
-            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-            Debug.Log(content);
+            Debug.Log(jsonData);
 
             try
             {
-                // Enviar la solicitud POST
-                var response = await client.PostAsync(url, content); // Reemplaza con tu URL de API
-
-                // Asegurarse de que la respuesta fue exitosa
-                response.EnsureSuccessStatusCode();
-
                 // Leer el contenido de la respuesta
-                var responseBody = await response.Content.ReadAsStringAsync();
+                var responseBody = www.downloadHandler.text;
                 Debug.Log("Respuesta de la API: " + responseBody);
             }
             catch (HttpRequestException e)
