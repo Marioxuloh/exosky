@@ -78,7 +78,7 @@ public class ClickStar : MonoBehaviour
 
     void Start()
     {
-        client = new HttpClient();
+        this.client = new HttpClient();
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         CreateInitialConstellar();
     }
@@ -87,7 +87,8 @@ public class ClickStar : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && createMode)
         {
-            this.SelectStars();
+            Debug.Log("Click detected");
+            SelectStars();
         }
 
         if(PlayerPrefs.GetString("onLoadStars", "") == "true")
@@ -172,6 +173,8 @@ public class ClickStar : MonoBehaviour
 
     public void SetCreateConstellar()
     {
+        Debug.Log("SetCreateConstellar");
+
         // Crear un nuevo constellar al iniciar el modo de creación
         Constellar newConstellar = new Constellar(); // Crear sin nombre
         constellars.Add(newConstellar); // Agregar a la lista
@@ -244,6 +247,8 @@ public class ClickStar : MonoBehaviour
 
     public void CancelCreateConstelar()
     {
+        Debug.Log("CancelCreateConstelar");
+
         createMode = false;
         RemoveEmptyConstellarGuides();
         panelCreate.SetActive(true);
@@ -281,7 +286,7 @@ public class ClickStar : MonoBehaviour
                 // Leer el contenido de la respuesta
                 var responseBody = www.downloadHandler.text;
 
-                this.CreateOldConnections(responseBody);
+                CreateOldConnections(responseBody);
             }
             catch (HttpRequestException e)
             {
