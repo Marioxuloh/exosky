@@ -87,15 +87,9 @@ public class GetNearbyStars : MonoBehaviour
         });
 
         Debug.Log("Obteniendo datos: ");
-<<<<<<< Updated upstream
-        using (UnityWebRequest www = UnityWebRequest.Post(this.apiUrl, jsonData, "application/json"))
-        {
-            Debug.Log(this.apiUrl);
-=======
         using (UnityWebRequest www = UnityWebRequest.Post(apiUrl, jsonData, "application/json"))
         {
             Debug.Log(apiUrl);
->>>>>>> Stashed changes
             Debug.Log(jsonData);
             yield return www.SendWebRequest();
 
