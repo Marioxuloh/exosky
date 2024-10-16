@@ -5,9 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Text;
 using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 [System.Serializable]
 public class Constellar
@@ -88,9 +85,8 @@ public class ClickStar : MonoBehaviour
             SelectStars();
         }
 
-        if(PlayerPrefs.GetString("onLoadStars", "") == "true")
+        if (PlayerPrefs.GetString("onLoadStars", "") == "true")
         {
-            Debug.Log("Buscando constelaciones...");
             StartCoroutine(GetConstelars());
             PlayerPrefs.SetString("onLoadStars", "false");
         }
@@ -106,19 +102,16 @@ public class ClickStar : MonoBehaviour
 
             if (selectedStarA == null)
             {
-                // Selección de la primera estrella
                 selectedStarA = selectedObject;
                 originalColorA = renderer.material.color;
                 renderer.material.color = Color.blue;
             }
             else if (selectedStarB == null && selectedObject != selectedStarA)
             {
-                // Selección de la segunda estrella
                 selectedStarB = selectedObject;
                 originalColorB = renderer.material.color;
                 renderer.material.color = Color.blue;
 
-                // Agregar las estrellas a la última constelación
                 if (constellars.Count > 0)
                 {
                     constellars[constellars.Count - 1].constellarsGuide.Add(new ConstellarGuide(selectedStarA.name, selectedStarB.name));
@@ -143,7 +136,7 @@ public class ClickStar : MonoBehaviour
 
     public void CreateConnections()
     {
-        var lastConstellar = constellars[constellars.Count - 1]; // Obtener la última constelación
+        var lastConstellar = constellars[constellars.Count - 1];
         foreach (ConstellarGuide guide in lastConstellar.constellarsGuide)
         {
             if (!guide.isCreated)
@@ -160,9 +153,9 @@ public class ClickStar : MonoBehaviour
                     float distance = direction.magnitude;
                     line.transform.localScale = new Vector3(0.1f, distance / 2, 0.1f);
                     line.transform.up = direction.normalized;
-
-                    guide.line = line; // Asignar línea
-                    guide.isCreated = true; // Marcar como creada
+                    line.GetComponent<Renderer>().material = new Material(Shader.Find("Custom/SimpleShader"));
+                    guide.line = line;
+                    guide.isCreated = true;
                 }
             }
         }
@@ -170,11 +163,8 @@ public class ClickStar : MonoBehaviour
 
     public void SetCreateConstellar()
     {
-        Debug.Log("SetCreateConstellar");
-
-        // Crear un nuevo constellar al iniciar el modo de creación
-        Constellar newConstellar = new Constellar(); // Crear sin nombre
-        constellars.Add(newConstellar); // Agregar a la lista
+        Constellar newConstellar = new Constellar();
+        constellars.Add(newConstellar);
 
         createMode = true;
         panelCreate.SetActive(false);
@@ -183,9 +173,7 @@ public class ClickStar : MonoBehaviour
 
     public void SaveConstelars()
     {
-        // Enviar el JSON a la API
-        SendConstellarData();
-
+        StartCoroutine(SendConstellarData());
         createMode = false;
         panelCreate.SetActive(true);
         panelSave.SetActive(false);
@@ -193,40 +181,36 @@ public class ClickStar : MonoBehaviour
 
     private IEnumerator SendConstellarData()
     {
-        // Solo obtener la última constelación creada
         var lastConstellar = constellars[constellars.Count - 1];
 
-        // Crear el JSON para enviar
         var saveData = new SaveData
         {
             coordenates = new List<string>()
         };
 
-        // Agregar las coordenadas como pares
         foreach (var guide in lastConstellar.constellarsGuide)
         {
             saveData.coordenates.Add($"{guide.starA}, {guide.starB}");
         }
 
         string jsonData = JsonUtility.ToJson(saveData);
+        Debug.Log(jsonData);
 
-        // Create a new request to send the JSON to the backend
-        using (UnityWebRequest www = UnityWebRequest.Post(url, jsonData, "application/json"))
+        UnityWebRequest request = new UnityWebRequest(url, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
         {
-            yield return www.SendWebRequest();
-
-            Debug.Log(jsonData);
-
-            try
-            {
-                // Leer el contenido de la respuesta
-                var responseBody = www.downloadHandler.text;
-                Debug.Log("Respuesta de la API: " + responseBody);
-            }
-            catch (HttpRequestException e)
-            {
-                Debug.Log("Error en la solicitud: " + e.Message);
-            }
+            Debug.Log("Error en la solicitud: " + request.error);
+        }
+        else
+        {
+            Debug.Log("Respuesta de la API: " + request.downloadHandler.text);
         }
     }
 
@@ -247,55 +231,45 @@ public class ClickStar : MonoBehaviour
 
     private void CreateInitialConstellar()
     {
-        constellars.Add(new Constellar()); // Crear una constelación inicial
+        constellars.Add(new Constellar());
     }
 
     private IEnumerator GetConstelars()
     {
-        Exoplanet exoplanet = GlobalData.Exoplanets[0];
-
-        // Crear el contenido de la solicitud
-        var jsonData = JsonUtility.ToJson(new GetExoplanet{
-            pl_name = exoplanet.pl_name
-        });
-
-        Debug.Log(jsonData);
-
-        // Create a new request to send the JSON to the backend
-        using (UnityWebRequest www = UnityWebRequest.Post(urlConstellations, jsonData, "application/json"))
+        var exoplanet = new GetExoplanet
         {
-            yield return www.SendWebRequest();
+            pl_name = GlobalData.Exoplanets[0].pl_name
+        };
 
-            try
-            {
-                // Leer el contenido de la respuesta
-                var responseBody = www.downloadHandler.text;
+        string jsonData = JsonUtility.ToJson(exoplanet);
+        UnityWebRequest request = new UnityWebRequest(urlConstellations, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
 
-                CreateOldConnections(responseBody);
-            }
-            catch (HttpRequestException e)
-            {
-                Debug.Log("Error en la solicitud: " + e.Message);
-            }
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log("Error en la solicitud: " + request.error);
+        }
+        else
+        {
+            string responseBody = request.downloadHandler.text;
+            CreateOldConnections(responseBody);
         }
     }
 
     public void CreateOldConnections(string oldConstellars)
     {
-        Debug.Log(oldConstellars.GetType());
-        // Deserializar el JSON
         var constellarsData = JsonUtility.FromJson<ConstellarDataArray>(oldConstellars);
-        Debug.Log(constellarsData);
-
-        // Crear un nuevo Constellar
         Constellar newConstellar = new Constellar();
 
-        foreach(var constellarData in constellarsData.result)
+        foreach (var constellarData in constellarsData.result)
         {
-            // Llenar la lista de ConstellarGuide con las coordenadas
             foreach (var coordinate in constellarData.coordenates)
             {
-                // Separar las estrellas por ", "
                 string[] stars = coordinate.Split(new string[] { ", " }, StringSplitOptions.None);
                 if (stars.Length == 2)
                 {
@@ -321,9 +295,9 @@ public class ClickStar : MonoBehaviour
                     float distance = direction.magnitude;
                     line.transform.localScale = new Vector3(0.1f, distance / 2, 0.1f);
                     line.transform.up = direction.normalized;
-
-                    guide.line = line; // Asignar línea
-                    guide.isCreated = true; // Marcar como creada
+                    line.GetComponent<Renderer>().material = new Material(Shader.Find("Custom/SimpleShader"));
+                    guide.line = line;
+                    guide.isCreated = true;
                 }
             }
         }

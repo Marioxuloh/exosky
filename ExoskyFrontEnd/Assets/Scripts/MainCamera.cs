@@ -7,28 +7,28 @@ public class MainCamera : MonoBehaviour
     [Header("Movement Settings")]
     public float mainSpeed = 100.0f;  // Velocidad regular
     public float shiftAdd = 250.0f;   // Aumenta al mantener Shift
-    public float maxShift = 1000.0f;  // Velocidad máxima con Shift
-    public float camSens = 0.25f;     // Sensibilidad del ratón
+    public float maxShift = 1000.0f;  // Velocidad mï¿½xima con Shift
+    public float camSens = 0.25f;     // Sensibilidad del ratï¿½n
 
-    private Vector3 lastMouse = new Vector3(255, 255, 255); // Posición inicial del ratón
-    private bool isDragging = false;  // Controla si se está arrastrando con el ratón
-    private Camera cam;               // Referencia a la cámara
+    private Vector3 lastMouse = new Vector3(255, 255, 255); // Posiciï¿½n inicial del ratï¿½n
+    private bool isDragging = false;  // Controla si se estï¿½ arrastrando con el ratï¿½n
+    private Camera cam;               // Referencia a la cï¿½mara
 
     void Start()
     {
-        cam = GetComponent<Camera>(); // Obtener la referencia a la cámara
+        cam = GetComponent<Camera>(); // Obtener la referencia a la cï¿½mara
     }
 
     void Update()
     {
-        // Controlar la rotación solo si se está arrastrando con el botón izquierdo del ratón
-        if (Input.GetMouseButtonDown(0)) // Si se presiona el botón izquierdo
+        // Controlar la rotaciï¿½n solo si se estï¿½ arrastrando con el botï¿½n izquierdo del ratï¿½n
+        if (Input.GetMouseButtonDown(0)) // Si se presiona el botï¿½n izquierdo
         {
             isDragging = true;
-            lastMouse = Input.mousePosition; // Guardar la posición inicial del ratón al presionar
+            lastMouse = Input.mousePosition; // Guardar la posiciï¿½n inicial del ratï¿½n al presionar
         }
 
-        if (Input.GetMouseButtonUp(0)) // Si se suelta el botón izquierdo
+        if (Input.GetMouseButtonUp(0)) // Si se suelta el botï¿½n izquierdo
         {
             isDragging = false;
         }
@@ -38,7 +38,7 @@ public class MainCamera : MonoBehaviour
             Vector3 mouseDelta = Input.mousePosition - lastMouse;
             Vector3 rotation;
 
-            // Comprobar si la cámara está en el sur (rotación Z cercana a 180 grados o -180 grados)
+            // Comprobar si la cï¿½mara estï¿½ en el sur (rotaciï¿½n Z cercana a 180 grados o -180 grados)
             if (Mathf.Abs(transform.eulerAngles.z - 180f) < 1f || Mathf.Abs(transform.eulerAngles.z) > 179f)
             {
                 // Invertir tanto el control vertical como horizontal en el sur
@@ -46,35 +46,18 @@ public class MainCamera : MonoBehaviour
             }
             else
             {
-                // Controles normales si no está en el sur
+                // Controles normales si no estï¿½ en el sur
                 rotation = new Vector3(-mouseDelta.y * camSens, mouseDelta.x * camSens, 0);
             }
 
-            transform.eulerAngles += rotation; // Aplicar la rotación a la cámara
-            lastMouse = Input.mousePosition;   // Actualizar la última posición del ratón
+            transform.eulerAngles += rotation; // Aplicar la rotaciï¿½n a la cï¿½mara
+            lastMouse = Input.mousePosition;   // Actualizar la ï¿½ltima posiciï¿½n del ratï¿½n
         }
 
         // Controlar el movimiento con las teclas
         Vector3 p = GetBaseInput();
-        if (p.sqrMagnitude > 0)
-        {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                p = p * shiftAdd;
-                p.x = Mathf.Clamp(p.x, -maxShift, maxShift);
-                p.y = Mathf.Clamp(p.y, -maxShift, maxShift);
-                p.z = Mathf.Clamp(p.z, -maxShift, maxShift);
-            }
-            else
-            {
-                p = p * mainSpeed;
-            }
 
-            p = p * Time.deltaTime;
-            transform.Translate(p);
-        }
-
-        // Controlar el zoom con la rueda del ratón
+        // Controlar el zoom con la rueda del ratï¿½n
         //HandleZoom();
     }
 
